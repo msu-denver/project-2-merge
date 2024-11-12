@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Incident Report</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <h1>Incident Report</h1>
+    <canvas id="incidentChart" width="400" height="200"></canvas>
+    <script>
+        var ctx = document.getElementById('incidentChart').getContext('2d');
+        var incidentChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: {{ incidents_per_year.keys()|list|tojson }},
+                datasets: [{
+                    label: 'Number of Incidents',
+                    data: {{ incidents_per_year.values()|list|tojson }},
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
