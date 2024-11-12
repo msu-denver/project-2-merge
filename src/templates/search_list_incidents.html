@@ -34,8 +34,8 @@
       </form>
     </div>
 <div id="list">
-  <a href="{{ url_for('search_list_incidents', page=incidents.prev_num, year=year, country=country, actor=actor, event=event, motive=motive, industry=industry) }}" {% if not incidents.has_prev %}class="disabled"{% endif %}>Previous</a>
-  <a href="{{ url_for('search_list_incidents', page=incidents.next_num, year=year, country=country, actor=actor, event=event, motive=motive, industry=industry) }}" {% if not incidents.has_next %}class="disabled"{% endif %}>Next</a>
+  <a href="{{ url_for('search_list_incidents', page=page - 1, year=year, country=country, actor=actor, event=event, motive=motive, industry=industry) }}" {% if not incidents.has_prev %}class="disabled"{% endif %}>Previous</a>
+  <a href="{{ url_for('search_list_incidents', page=page + 1, year=year, country=country, actor=actor, event=event, motive=motive, industry=industry) }}" {% if not incidents.has_next %}class="disabled"{% endif %}>Next</a>
 <br>
 
   <table>

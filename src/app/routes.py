@@ -7,12 +7,13 @@ Description: Project 2 - Incidents
 
 from datetime import datetime
 from app import app, db, cache
-from app.models import User, Incident, Country
+from app.models import User, Incident, Country, ActorType, Motive, EventType, Industry
 from app.forms import IncidentUpdateForm, SignUpForm, LoginForm, IncidentSearchForm, IncidentCreateForm
 from flask import render_template, redirect, request, url_for, flash
 from sqlalchemy import and_, func, desc
 from flask_login import login_required, login_user, logout_user, current_user
 from flask_sqlalchemy import SQLAlchemy
+from collections import namedtuple
 import bcrypt
 
 @app.route('/')
@@ -48,7 +49,6 @@ def login():
         user = User.query.filter_by(id=form.id.data).first()
         if user and bcrypt.checkpw(form.password.data.encode("utf-8"), user.passwd):
             login_user(user)
-            flash('login successful!')
             return redirect(url_for('search_list_incidents')) 
         else:
             flash('incorrect username or password. please try again.')
@@ -99,7 +99,6 @@ def search_incidents():
 
 @login_required
 @app.route('/incidents')
-@cache.cached(timeout=300)
 def list_incidents():
     year = request.args.get('year', None)
     country = request.args.get('country', None)
@@ -131,18 +130,42 @@ def list_incidents():
     next_page = page + 1
     return render_template('list_incidents.html', incidents=incidents, counter=counter, prev_page=prev_page, next_page=next_page)
 
+
+def deserialize(serialized):
+    return Incident(
+        id=serialized['id'],
+        date=serialized['date'],
+        actor=serialized['actor'],
+        actor_type_code=serialized['actor_type'] if serialized['actor_type'] else None,
+        organization=serialized['organization'],
+        industry_code=serialized['industry_code'],
+        industry=serialized['industry'] if serialized['industry'] else None,
+        motive_code=serialized['motive'] if serialized['motive'] else None,
+        event_type_code=serialized['event_type'] if serialized['event_type'] else None,
+        description=serialized['description'],
+        source_url=serialized['source_url'],
+        country_code=serialized['country_code'],
+        actor_country=serialized['actor_country'],
+        actor_type = serialized['actor_type'],
+        motive = serialized['motive'],
+        event_type = serialized['event_type'],
+        country = serialized['country']
+    )
 @login_required
 @app.route('/incidents/search_list', methods=['GET', 'POST'])
+@cache.cached(query_string=True)
 def search_list_incidents():
     form = IncidentSearchForm()
     filters = []
     page = request.args.get('page', default=1, type=int)  
-    year = request.args.get('year', None)
-    country = request.args.get('country', None)
-    actor = request.args.get('actor', None)
-    event = request.args.get('event', None)
-    motive = request.args.get('motive', None)
-    industry = request.args.get('industry', None)
+    if page < 1 :
+        page = 1
+    year = None
+    country = None
+    actor = None
+    event = None
+    motive = None
+    industry = None
     page_size = 10
 
     if form.validate_on_submit():
@@ -162,10 +185,18 @@ def search_list_incidents():
             motive = form.motive.data
             filters.append(Incident.motive_code == form.motive.data)
         if form.eventType.data != "0":
+            event = form.eventType.data
             filters.append(Incident.event_type_code == form.eventType.data)
         if form.countries.data != "NV":
+            country = form.countries.data
             filters.append(Incident.country_code == form.countries.data)
     else:
+        year = request.args.get('year', None)
+        country = request.args.get('country', None)
+        actor = request.args.get('actor', None)
+        event = request.args.get('event', None)
+        motive = request.args.get('motive', None)
+        industry = request.args.get('industry', None)
         if year:
             filters.append(Incident.date <= str(int(year)) + "01-01")
             filters.append(Incident.date >= str(int(year) - 1) + "01-01")
@@ -179,8 +210,16 @@ def search_list_incidents():
             filters.append(Incident.motive_code == motive)
         if industry and industry != "0":
             filters.append(Incident.industry_code == industry)
-
-    incidents = Incident.query.filter(and_(*filters)).paginate(page=page, per_page=page_size, error_out=False)
+    cache_key = f"incidents_page_{page}_filters_{year}_{country}_{actor}_{event}_{motive}_{industry}"
+    cached_incidents = cache.get(cache_key)
+    incidents = []
+    if cached_incidents:
+        for cached_incident in cached_incidents:
+            incidents.append(deserialize(cached_incident))
+    else:
+        incidents = Incident.query.filter(and_(*filters)).paginate(page=page, per_page=page_size, error_out=False)
+        serialized_incidents = [incident.serialize() for incident in incidents.items]
+        cache.set(cache_key, serialized_incidents)
 
     return render_template(
         'search_list_incidents.html',
@@ -192,12 +231,14 @@ def search_list_incidents():
         motive=motive,
         industry=industry,
         page=page,
-        form = IncidentSearchForm()
+        form=form
     )
-
 @login_required
 @app.route('/incidents/create',methods=['GET', 'POST'])
 def create_incident():
+    if not current_user.admin: 
+        flash('You do not have permission to delete this incident.')
+        return redirect(url_for('search_list_incidents')) 
     form = IncidentCreateForm()
     if form.validate_on_submit():
         last_id = db.session.query(Incident.id).order_by(desc(Incident.id)).first()
@@ -234,6 +275,9 @@ def create_incident():
 @login_required
 @app.route('/incidents/<int:id>',methods=['GET', 'POST'])
 def update_incident(id):
+    if not current_user.admin: 
+        flash('You do not have permission to delete this incident.')
+        return redirect(url_for('search_list_incidents')) 
     incident = Incident.query.get(id)
     form = IncidentUpdateForm(obj=incident)
     if form.validate_on_submit():
@@ -250,7 +294,7 @@ def update_incident(id):
         incident.country_code=form.country_code.data
         incident.actor_country=form.actor_country.data
         db.session.commit()
-        return redirect(url_for('list_facilities'))
+        return redirect(url_for('search_list_incidents'))
     return render_template('update_incident.html', form=form)
 
 @login_required

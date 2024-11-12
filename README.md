@@ -12,7 +12,7 @@ This section describes key **user stories** identified for **Incidents**. Screen
 As a user, I want to register on the platform to search the database of cyber incidents. When I provide all the required information (user ID, name, a short description, and password) and click 'submit', my account should be created. Additionally, some users will be configured as administrators offline.
 
 ```
-TODO: estimate of effort in terms of user story points: 1
+user story points: 1
 ```
 
 ![pics/pic1.png](pics/pic1.png)
@@ -22,7 +22,7 @@ TODO: estimate of effort in terms of user story points: 1
 As a registered user, I want to log in to the platform. When I enter my user ID and password, the system should verify my credentials. If they match the records in the database, I should be granted access to navigate the app.
 
 ```
-TODO: estimate of effort in terms of user story points: 1
+user story points: 1
 ```
 
 ![pics/pic2.png](pics/pic2.png)
@@ -34,7 +34,7 @@ As a registered user, I want to search for cyber incidents by year, actor type, 
 ![pics/pic3.png](pics/pic3.png)
 
 ```
-TODO: estimate of effort in terms of user story points: 2
+user story points: 2
 ```
 
 ## US#4: List Incidents
@@ -42,7 +42,7 @@ TODO: estimate of effort in terms of user story points: 2
 As a registered user, I want to view a summarized table of cyber incidents based on specific search criteria. The table should display a limited number of incidents (e.g., 10) to fit the screen. I should be able to navigate forward and backward through the filtered list of incidents.
 
 ```
-TODO: estimate of effort in terms of user story points: 3
+user story points: 3
 ```
 
 ![pics/pic4.png](pics/pic4.png)
@@ -52,7 +52,7 @@ TODO: estimate of effort in terms of user story points: 3
 As an administrator, I want to create new cyber incidents. Each incident should have a unique ID and include, at a minimum, the following information: date of the incident, perpetrating actor, actor type, target organization, industry, motive, event type, a short description, a source URL with more details, the affected country, and the actor’s country. More information about those data fields can be obtained from [Cyber Events Database Home](https://cissm.umd.edu/research-impact/publications/cyber-events-database-home).
 
 ```
-TODO: estimate of effort in terms of user story points: 2
+user story points: 2
 ```
 
 ![pics/pic5.png](pics/pic5.png)
@@ -62,7 +62,7 @@ TODO: estimate of effort in terms of user story points: 2
 As an administrator, I want to delete cyber incidents. When I provide the incident’s ID and confirm, the incident should be removed from the database.
 
 ```
-TODO: estimate of effort in terms of user story points: 2
+user story points: 2
 ```
 
 ![pics/pic6.png](pics/pic6.png)
@@ -72,7 +72,7 @@ TODO: estimate of effort in terms of user story points: 2
 As an administrator, I want to update cyber incidents. When I provide the incident’s ID, the incident’s information should be retrieved from the database and displayed, allowing me to edit the fields. Upon confirmation, the updated information should be saved. 
 
 ```
-TODO: estimate of effort in terms of user story points: 2
+user story points: 2
 ```
 
 ![pics/pic7.png](pics/pic7.png)
@@ -82,7 +82,7 @@ TODO: estimate of effort in terms of user story points: 2
 As a registered user, I want to generate a bar plot that summarizes the number of cyber incidents per year so that I can easily visualize trends and patterns over time
 
 ```
-TODO: estimate of effort in terms of user story points: 3
+user story points: 3
 ```
 
 ![pics/pic8.png](pics/pic8.png)

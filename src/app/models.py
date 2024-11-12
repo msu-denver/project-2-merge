@@ -71,6 +71,7 @@ class Industry(db.Model):
         return f'{self.code},{self.description}'
 
 class Incident(db.Model):
+    
     __tablename__ = 'incidents'
     id = db.Column(db.Integer, primary_key=True)
     date = db.Column(db.Date, nullable=False)
@@ -92,3 +93,23 @@ class Incident(db.Model):
 
     def __str__(self):
         return f'{self.id},{self.date},{self.actor},{self.actor_type},{self.organization},{self.industry},{self.motive},{self.event_type},{self.description},{self.source_url},{self.country},{self.actor_country}'
+    def serialize(self):
+        return {
+            'id': self.id,
+            'date': self.date,
+            'actor': self.actor,
+            'actor_type_code': self.actor_type_code,
+            'actor_type': self.actor_type,
+            'organization': self.organization,
+            'industry_code': self.industry_code,
+            'industry': self.industry,
+            'motive': self.motive,
+            'motive_code': self.motive_code,
+            'event_type_code': self.event_type_code,
+            'event_type': self.event_type,
+            'description': self.description,
+            'source_url': self.source_url,
+            'country_code': self.country.code,
+            'country': self.country,
+            'actor_country': self.actor_country
+        }

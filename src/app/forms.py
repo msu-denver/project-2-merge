@@ -26,7 +26,7 @@ class LoginForm(FlaskForm):
 
 class IncidentSearchForm(FlaskForm):
     year = IntegerField('Year', default=None, validators=[Optional()])
-    actorType = SelectField('Actor Type', choices=[
+    actorType = SelectField('Actor Type',  choices=[
         (0, "any"),
         (1, "criminal"), 
         (2, "hactivist"),
