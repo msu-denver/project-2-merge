@@ -1,0 +1,59 @@
+@startuml
+
+class User {
+    id
+    name
+    about
+    passwd
+    admin 
+}
+
+class Country { 
+    code 
+    description
+}
+
+class ActorType { 
+    code 
+    description
+}
+
+class EventType { 
+    code 
+    description
+}
+
+class Motive { 
+    code 
+    description
+}
+
+class Industry { 
+    code 
+    description
+}
+
+class Incident { 
+    id 
+    date 
+    actor
+    organization
+    description 
+    source_url 
+    actor_country
+}
+
+User -[hidden]-> Country
+Country -[hidden]-> ActorType
+ActorType -[hidden]-> EventType
+EventType -[hidden]-> Motive
+Motive -[hidden]-> Industry
+Industry -[hidden]-> Incident
+
+Incident "N" o-> "1" Country: country 
+Incident "N" o-> "1" ActorType: actor_type
+Incident "N" o-> "1" Industry: industry 
+Incident "N" o-> "1" EventType: event_type
+Incident "N" o-> "1" Motive: motive 
+
+@enduml

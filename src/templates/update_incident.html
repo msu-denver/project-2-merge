@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+<title>{% block title %}Update incident{% endblock %}</title>
+{% block main %}
+    <form action="" method="POST" novalidate>
+        {{ form.hidden_tag() }}
+        <p> {{ form.id.label }} <br> {{ form.id }} </p>
+        <p> {{ form.date.label }} <br> {{ form.date }} </p>
+        <p> {{ form.actor.label }} <br> {{ form.actor }} </p>
+        <p> {{ form.actor_type_code.label }} <br> {{ form.actor_type_code }} </p>
+        <p> {{ form.organization.label }} <br> {{ form.organization }} </p>
+        <p> {{ form.industry_code.label }} <br> {{ form.industry_code }} </p>
+        <p> {{ form.motive_code.label }} <br> {{ form.motive_code }} </p>
+        <p> {{ form.event_type_code.label }} <br> {{ form.event_type_code }} </p>
+        <p> {{ form.description.label }} <br> {{ form.description(size=100) }} </p>
+        <p> {{ form.source_url.label }} <br> {{ form.source_url(size=100) }} </p>
+        <p> {{ form.country_code.label }} <br> {{ form.country_code }} </p>
+        <p> {{ form.actor_country.label }} <br> {{ form.actor_country }} </p>
+        <p> {{ form.submit() }} </p>
+    </form>
+{% endblock %}
